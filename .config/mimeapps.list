@@ -1,0 +1,6 @@
+[Default Applications]
+text/plain=nvim.desktop
+text/html=qutebrowser.desktop
+application/pdf=org.pwmt.zathura.desktop
+image/png=satty.desktop
+image/jpeg=satty.desktop

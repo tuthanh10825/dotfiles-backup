@@ -1,0 +1,3 @@
+include /home/tuthanh/.cache/wal/zathura.config
+set font "CaskaydiaCove Nerd Font"
+set selection-clipboard clipboard
