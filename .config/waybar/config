@@ -7,7 +7,7 @@
     "reload_style_on_change": true,
     "modules-left": ["hyprland/workspaces", "hyprland/submap", "tray", "hyprland/window"],
     "modules-center": ["clock"],
-    "modules-right": ["backlight", "battery", "pulseaudio"],
+    "modules-right": ["backlight", "battery", "pulseaudio","custom/div", "custom/updates", "custom/power"],
 
     "hyprland/workspaces": {
         "disable-scroll": true,
@@ -54,8 +54,8 @@
    "battery": {
         "states": {
             "good": 95,
-            "warning": 30,
-            "critical": 20
+            "warning": 20,
+            "critical": 10
         },
         "format": "{icon} {capacity}%",
         "rotate": 0,
@@ -78,6 +78,8 @@
         "format": "{icon} {volume}",
         "rotate": 0,
         "format-muted": "󰝟",
+        "on-click": "volumecontrol.sh -s",
+        "on-click-right": "volume.sh", 
         "on-click-middle": "volumecontrol.sh -o m",
         "on-scroll-up": "volumecontrol.sh -o i",
         "on-scroll-down": "volumecontrol.sh -o d",
@@ -98,4 +100,30 @@
         "rotate": 0,
         "spacing": 5
     },
+    "custom/updates": {
+        "exec": "systemupdate.sh",
+        "return-type": "json",
+        "format": "{}",
+        "rotate": 0,
+        "on-click": "hyprctl dispatch exec 'systemupdate.sh up'",
+        "interval": 86400, // once every day
+        "tooltip": true,
+        "signal": 20,
+    },
+    "custom/power": {
+        "format": " ",
+        "rotate": 0,
+        "exec": "echo; echo  logout",
+        "on-click": "logoutlaunch.sh",
+        "on-click-right": "logoutlaunch.sh",
+        "interval" : 86400, // once every day
+        "tooltip": true
+    },
+    // modules for padding //
+
+    "custom/div": {
+        "format": " |",
+        "interval" : "once",
+        "tooltip": false
+    }
     }

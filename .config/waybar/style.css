@@ -10,21 +10,21 @@ window#waybar{
 .modules-left {
     padding:5px;
     margin:2 0 2 2;
-    border-radius:10px;
+    border-radius:5px;
     background: alpha(@background,.6);
     box-shadow: 0px 0px 2px rgba(0, 0, 0, .6);
 }
 .modules-center {
     padding:5px;
     margin:2 0 2 0;
-    border-radius:10px;
+    border-radius:5px;
     background: alpha(@background,.6);
     box-shadow: 0px 0px 2px rgba(0, 0, 0, .6);
 }
 .modules-right {
     padding:5px;
     margin: 2 2 2 0;
-    border-radius:10px;
+    border-radius:5px;
     background: alpha(@background,.6);
     box-shadow: 0px 0px 2px rgba(0, 0, 0, .6);
 }
@@ -32,11 +32,11 @@ tooltip {
     background:@background;
     color: @color7;
 }
-#clock:hover, #custom-pacman:hover, #custom-notification:hover,#bluetooth:hover,#network:hover,#battery:hover, #cpu:hover,#memory:hover,#temperature:hover{
+#clock:hover, #custom-updates:hover, #custom-power:hover, #pulseaudio:hover{
     transition: all .3s ease;
     color:@color9;
 }
-#custom-notification {
+#custom-power {
     padding: 0px 5px;
     transition: all .3s ease;
     color:@color7;
@@ -46,7 +46,7 @@ tooltip {
     color:@color7;
     transition: all .3s ease;
 }
-#custom-pacman{
+#custom-updates{
     padding: 0px 5px;
     transition: all .3s ease;
     color:@color7;
@@ -115,25 +115,7 @@ tooltip {
     padding: 0px 5px;
     transition: all .3s ease; 
 }
-#custom-expand{
-    padding: 0px 5px;
-    color:alpha(@foreground,.2);
-    text-shadow: 0px 0px 2px rgba(0, 0, 0, .7);
-    transition: all .3s ease; 
-}
-#custom-expand:hover{
-    color:rgba(255,255,255,.2);
-    text-shadow: 0px 0px 2px rgba(255, 255, 255, .5);
-}
-#custom-colorpicker{
-    padding: 0px 5px;
-}
 
-#custom-endpoint{
-    color:transparent;
-    text-shadow: 0px 0px 1.5px rgba(0, 0, 0, 1);
-
-}
 #tray{
     padding: 0px 5px;
     transition: all .3s ease; 
@@ -148,3 +130,15 @@ tooltip {
     padding: 0px 5px;
     transition: all .3s ease; 
 }
+#custom-r_end {
+    border-radius: 0px 21px 21px 0px;
+    margin-right: 9px;
+    padding-right: 3px;
+}
+
+#custom-l_end {
+    border-radius: 21px 0px 0px 21px;
+    margin-left: 9px;
+    padding-left: 3px;
+}
+
