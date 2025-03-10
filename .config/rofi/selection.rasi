@@ -12,7 +12,7 @@ configuration {
 // Main //
 window {
     enabled:                     true;
-    fullscreen:                  false;
+    fullscreen:                  true;
     transparency:                "real";
     cursor:                      "default";
     spacing:                     0em;
