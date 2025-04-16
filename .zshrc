@@ -70,3 +70,8 @@ for file in $(find ~/.local/scripts/src/); do source "$file"; done
 
 # Using conda
 [ -f /opt/miniconda3/etc/profile.d/conda.sh ] && source /opt/miniconda3/etc/profile.d/conda.sh
+
+export PATH=$PATH:/home/tuthanh/.spicetify
+
+# To customize prompt, run `p10k configure` or edit ~/.local/scripts/src/.p10k.zsh.
+[[ ! -f ~/.local/scripts/src/.p10k.zsh ]] || source ~/.local/scripts/src/.p10k.zsh

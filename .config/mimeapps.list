@@ -1,6 +1,10 @@
+[Added Associations]
+application/x-logisim-evolution=zathura.desktop;
+
 [Default Applications]
-text/plain=nvim.desktop
-text/html=qutebrowser.desktop
 application/pdf=org.pwmt.zathura.desktop
-image/png=satty.desktop
+application/x-logisim-evolution=zathura.desktop;
 image/jpeg=satty.desktop
+image/png=satty.desktop
+text/html=qutebrowser.desktop
+text/plain=nvim.desktop

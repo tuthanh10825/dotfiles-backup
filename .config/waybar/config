@@ -1,25 +1,27 @@
 {
     "layer": "top",
-    "position": "top",
-    "height": 30,
-    "spacing": 4,
+    "position": "bottom",
+    "height": 10,
+    "spacing": 2,
     "exclusive": true,
     "reload_style_on_change": true,
-    "modules-left": ["hyprland/workspaces", "hyprland/submap", "tray", "hyprland/window"],
-    "modules-center": ["clock"],
-    "modules-right": ["backlight", "battery", "pulseaudio","custom/div", "custom/updates", "custom/power"],
+    "modules-left": ["hyprland/workspaces", "hyprland/submap"],
+    "modules-center": ["hyprland/window"],
+    "modules-right": [ "clock","custom/div" ,"custom/updates", "network", "pulseaudio", "backlight", "battery"],
 
     "hyprland/workspaces": {
-        "disable-scroll": true,
-        "all-outputs": true,
-        "format": " {name}",
+        "format": "{name}",
+        "persistent-workspaces": {
+                "*": [1,2,3] 
+            }
     },
 
     "hyprland/submap": {
         "format": "<span style=\"italic\">{}</span>",
     },
     "hyprland/window": {
-        "max-length": 50, 
+        "max-length": 70,
+
     }, 
     "tray": {
         "icon-size": 18,
@@ -28,7 +30,7 @@
     },
 
     "clock": {
-        "format": "{:%R 󰃭 %d·%m·%y}",
+        "format": "{:%A, %B %d, %Y at %R}",
         "rotate": 0,
         "tooltip-format": "<span>{calendar}</span>",
         "calendar": {
@@ -57,30 +59,30 @@
             "warning": 20,
             "critical": 10
         },
-        "format": "{icon} {capacity}%",
+        "format": "{icon}",
         "rotate": 0,
-        "format-charging": " {capacity}%",
-        "format-plugged": " {capacity}%",
-        "format-alt": "{time} {icon}",
+        "format-charging": "",
+        "format-plugged": "",
+        "format-alt": "{icon} {capacity}%",
         "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
     },
 
     "backlight": {
         "device": "intel_backlight",
         "rotate": 0,
-        "format": "{icon} {percent}%",
+        "format": "{icon}",
+        "tooltip-format": "{icon} {percent}%",
         "format-icons": ["", "", "", "", "", "", "", "", ""],
         "on-scroll-up": "brightnessctl set 5%+",
         "on-scroll-down": "brightnessctl set 5%-",
-        "min-length": 6
     },
      "pulseaudio": {
-        "format": "{icon} {volume}",
+        "format": "{icon}",
+        "format-alt": "{icon} {volume}%",
         "rotate": 0,
         "format-muted": "󰝟",
-        "on-click": "volumecontrol.sh -s",
-        "on-click-right": "volume.sh", 
-        "on-click-middle": "volumecontrol.sh -o m",
+        "on-click-right": "volumecontrol.sh -s", 
+        "on-click-middle": "volume.sh",
         "on-scroll-up": "volumecontrol.sh -o i",
         "on-scroll-down": "volumecontrol.sh -o d",
         "tooltip-format": "{icon} {desc} // {volume}%",
@@ -92,7 +94,7 @@
             "phone": "",
             "portable": "",
             "car": "",
-            "default": ["", "", ""]
+            "default": ["", "", ""],
         }
     },
         "tray": {
@@ -122,8 +124,17 @@
     // modules for padding //
 
     "custom/div": {
-        "format": " |",
+        "format": "|",
         "interval" : "once",
         "tooltip": false
-    }
+    },
+    "network": {
+            "format-wifi": "",
+            "format-ethernet":"",
+            "format-disconnected": "",
+            "tooltip-format-disconnected": "Error",
+            "tooltip-format-wifi": "{essid} ({signalStrength}%) ",
+            "tooltip-format-ethernet": "{ifname}",
+            "on-click": "kitty nmtui"
+        },
     }

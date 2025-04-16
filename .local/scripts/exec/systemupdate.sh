@@ -10,7 +10,6 @@ scrDir=$(dirname "$(realpath "$0")")
 source "/home/tuthanh/.local/scripts/src/globalcontrol.sh"
 get_aurhlpr
 export pkg_installed
-fpk_exup="pkg_installed flatpak && flatpak update"
 
 # Trigger upgrade
 if [ "$1" == "up" ] ; then
@@ -19,7 +18,6 @@ if [ "$1" == "up" ] ; then
     fastfetch
     $0 upgrade
     ${aurhlpr} -Syu
-    $fpk_exup
     read -n 1 -p 'Press any key to continue...'
     "
     kitty --title systemupdate sh -c "${command}"

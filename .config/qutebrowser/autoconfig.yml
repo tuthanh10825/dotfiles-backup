@@ -16,12 +16,15 @@ settings:
     https://github.com: access-paste
     https://gitlab.com: access-paste
     https://wiki.hyprland.org: access-paste
+    https://www.kaggle.com: access-paste
     https://www.overleaf.com: access-paste
   content.media.audio_capture:
     https://www.messenger.com: true
   content.media.video_capture:
     https://www.messenger.com: true
   content.notifications.enabled:
+    https://colab.research.google.com: false
+    https://dnschecker.org: false
     https://hoanghamobile.com: false
     https://shopee.vn: false
     https://tetr.io: false
@@ -29,5 +32,7 @@ settings:
     https://www.qwertykeys.com: false
     https://www.tiktok.com: false
     https://www.youtube.com: false
+  content.register_protocol_handler:
+    https://mail.google.com?extsrc=mailto&url=%25s: false
   fonts.completion.entry:
     global: default_size default_family
