@@ -6,7 +6,7 @@ configuration {
     font:                        "JetBrainsMono Nerd Font 10";
 }
 
-@theme "~/.cache/wal/colors-rofi.rasi"
+@theme "~/.config/rofi/matugen-rofi.rasi"
 
 
 // Main //

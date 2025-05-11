@@ -51,11 +51,9 @@ wallSet="$HOME/.config/theme/wall.set"
 if [ ! -z "${rofiSel}" ] ; then
     setWall="$(find "${wallSource}" -type f -name "${rofiSel}")"
     if [ -n "$setWall" ]; then
-        #./wallpaperchoose.sh "$setWall"
         ln -sf "$setWall" "$wallSet"
-        hyprctl hyprpaper reload ,"${wallSet}"
-        wal -i "${wallSet}"
-        notify-send -a "t1" -i "${thmbDir}/$(sha1sum "${setWall}" | awk '{print $1}').sqre" " ${rofiSel}"
+        "$scrDir/wallpaper.sh" "$wallSet"
+        notify-send -a "t1" "Choosing $setWall"
     fi
 fi
 

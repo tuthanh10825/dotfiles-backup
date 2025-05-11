@@ -28,11 +28,13 @@ button {
 button:focus {
     background-color: @color4;
     background-size: 30%;
+    color: @color1;
 }
 
 button:hover {
     background-color: @color6;
     background-size: 40%;
+    color: @background;
     border-radius: 0;
     animation: gradient_f 20s ease-in infinite;
     transition: all 0.3s cubic-bezier(.55,0.0,.28,1.682);

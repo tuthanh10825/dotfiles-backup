@@ -7,10 +7,12 @@
 config_version: 2
 settings:
   content.desktop_capture:
+    https://meet.google.com: true
     https://www.messenger.com: true
   content.javascript.clipboard:
     https://aur.archlinux.org: access-paste
     https://chatgpt.com: access-paste
+    https://developer.mozilla.org: access-paste
     https://developer.spotify.com: access-paste
     https://drive.google.com: access-paste
     https://github.com: access-paste
@@ -19,8 +21,12 @@ settings:
     https://www.kaggle.com: access-paste
     https://www.overleaf.com: access-paste
   content.media.audio_capture:
+    https://meet.google.com: true
     https://www.messenger.com: true
+  content.media.audio_video_capture:
+    https://meet.google.com: true
   content.media.video_capture:
+    https://meet.google.com: true
     https://www.messenger.com: true
   content.notifications.enabled:
     https://colab.research.google.com: false

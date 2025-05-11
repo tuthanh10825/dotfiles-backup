@@ -55,14 +55,16 @@
 
    "battery": {
         "states": {
-            "good": 95,
+            "good": 80,
             "warning": 20,
-            "critical": 10
+            "critical": 5
         },
         "format": "{icon}",
         "rotate": 0,
         "format-charging": "",
         "format-plugged": "",
+        "format-charging-alt": " {capacity}%",
+        "format-plugged-alt": " {capacity}%",
         "format-alt": "{icon} {capacity}%",
         "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
     },

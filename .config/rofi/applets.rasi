@@ -15,7 +15,7 @@ configuration {
 
 /*****----- Global Properties -----*****/
 
-@import "~/.cache/wal/colors-rofi.rasi"
+@import "~/.config/rofi/matugen-rofi.rasi"
 
 /*
 USE_ICON=YES

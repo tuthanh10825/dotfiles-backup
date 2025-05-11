@@ -1,20 +1,35 @@
 #!/usr/bin/env bash
 
-undock=false
 scrDir=$(dirname "$(realpath "$0")")
+
+battery_full_threshold=${battery_full_threshold:-100}
+battery_critical_threshold=${battery_critical_threshold:-2}
+unplug_charger_threshold=${unplug_charger_threshold:-80}
+battery_low_threshold=${battery_low_threshold:-20}
+timer=${timer:-120}
+notify=${notify:-60}
+interval=${interval:-5}
+execute_critical=${execute_critical:-"systemctl hibernate"}
+execute_low=${execute_low:-}
+execute_unplug=${execute_unplug:-}
+executed_low=false
+executed_unplug=false
 
 config_info() {
 cat <<  EOF
-
-      STATUS      THRESHOLD    INTERVAL
-      Full        $battery_full_threshold          $notify Minutes
-      Critical    $battery_critical_threshold           $timer Seconds then '$execute_critical'
-      Low         $battery_low_threshold           $interval Percent    then '$execute_low'
-      Unplug      $unplug_charger_threshold          $interval Percent   then '$execute_unplug'
-
-      Charging: $execute_charging
-      Discharging: $execute_discharging
+================================================================================
+BATTERY STATUS CONFIGURATION
+================================================================================
+  STATUS      | THRESHOLD                | INTERVAL / ACTION
+--------------+--------------------------+--------------------------------------
+  Full        | $(printf "%-24s" "$battery_full_threshold") | Notify every $notify minutes
+  Critical    | $(printf "%-24s" "$battery_critical_threshold") | Every $timer sec → '$execute_critical'
+  Low         | $(printf "%-24s" "$battery_low_threshold") | Every $interval% drop → '$execute_low'
+  Unplug      | $(printf "%-24s" "$unplug_charger_threshold") | Every $interval% rise → '$execute_unplug'
+--------------+--------------------------+--------------------------------------
+================================================================================
 EOF
+
 }
 
 is_laptop() { # Check if the system is a laptop
@@ -30,10 +45,10 @@ is_laptop
 fn_verbose () {
 if $verbose; then
 cat << VERBOSE
-=============================================
-        Battery Status: $battery_status
+===================================================
+        Battery Status:     $battery_status
         Battery Percentage: $battery_percentage
-=============================================
+===================================================
 VERBOSE
 fi
 }
@@ -47,7 +62,7 @@ fn_percentage () {
                         fn_notify  "-t 5000 " "CRITICAL" "Battery Charged" "Battery is at $battery_percentage%. You can unplug the charger!"
                         last_notified_percentage=$battery_percentage
                     elif [[ "$battery_percentage" -le "$battery_critical_threshold" ]]; then
-                        count=$(( timer > $mnt ? timer :  $mnt )) # reset count
+                        count=$(( timer > mnt ? timer : mnt )) # reset count
                         while [ $count -gt 0 ] && [[ $battery_status == "Discharging"* ]]; do
                         for battery in /sys/class/power_supply/BAT*; do  battery_status=$(< "$battery/status") ; done
                         if [[ $battery_status != "Discharging" ]] ; then break ; fi
@@ -61,54 +76,22 @@ fn_percentage () {
                         last_notified_percentage=$battery_percentage
                     fi
 }
-fn_action () { #handles the $execute_critical command #? This is special as it will try to execute always
-                  count=$(( timer > $mnt ? timer :  $mnt )) # reset count
-                  nohup $execute_critical
+
+fn_action() { 
+  # Handles the $execute_critical command - always tries to execute
+  count=$(( timer > mnt ? timer : mnt )) # reset count
+  sh -c "$execute_critical" 
 }
 
-fn_status () {
-if [[ $battery_percentage -ge $battery_full_threshold ]] && [[ "$battery_status" != *"Discharging"* ]]; then echo "Full and $battery_status"
- battery_status="Full" ;fi
-case "$battery_status" in         # Handle the power supply status
-                "Discharging") if $verbose; then echo "Case:$battery_status Level: $battery_percentage" ;fi
-                    if [[ "$prev_status" != "Discharging" ]] || [[ "$prev_status" == "Full" ]] ; then
-                        prev_status=$battery_status
-                        urgency=$([[ $battery_percentage -le "$battery_low_threshold" ]] && echo "CRITICAL" || echo "NORMAL")
-                        fn_notify   "-t 5000 -r 54321 " "$urgency" "Charger Plug OUT" "Battery is at $battery_percentage%."
-                        $execute_discharging
-                    fi
-                    fn_percentage
-                    ;;
-                "Not"*|"Charging") if $verbose; then echo "Case:$battery_status Level: $battery_percentage" ;fi
-                    if [[ "$prev_status" == "Discharging" ]] || [[ "$prev_status" == "Not"* ]] ; then
-                        prev_status=$battery_status
-                        count=$(( timer > $mnt ? timer :  $mnt )) # reset count
-                        urgency=$([[ "$battery_percentage" -ge $unplug_charger_threshold ]] && echo "CRITICAL" || echo "NORMAL")
-                        fn_notify  "-t 5000 -r 54321 " "$urgency" "Charger Plug In" "Battery is at $battery_percentage%."
-                    $execute_charging
-                    fi
-                    fn_percentage
-                    ;;
-                "Full") if $verbose; then echo "Case:$battery_status Level: $battery_percentage" ;fi
-                    if [[ $battery_status != "Discharging" ]]; then
-                    now=$(date +%s)
-                    if [[ "$prev_status" == *"Charging"* ]] || ((now - lt >= $((notify*60)) )); then
-                     fn_notify "-t 5000 -r 54321" "CRITICAL" "Battery Full" "Please unplug your Charger"
-                    prev_status=$battery_status lt=$now
-                    $execute_charging
-                    fi
-                    fi
-                    ;;
-                    *)
-                    fn_percentage
-                    ;;
-            esac
-}
+
+
 
 get_battery_info() { #TODO Might change this if we can get an effective way to parse dbus. I will do it some time...
-	total_percentage=0 battery_count=0
+	total_percentage=0
+    battery_count=0
 	for battery in /sys/class/power_supply/BAT*; do
-		battery_status=$(<"$battery/status") battery_percentage=$(<"$battery/capacity")
+		battery_status=$(<"$battery/status")
+        battery_percentage=$(<"$battery/capacity")
 		total_percentage=$((total_percentage + battery_percentage))
 		battery_count=$((battery_count + 1))
 	done
@@ -118,9 +101,7 @@ get_battery_info() { #TODO Might change this if we can get an effective way to p
 fn_status_change () { # Handle when status changes
 get_battery_info
   # Add these two lines at the beginning of the function
-  local executed_low=false
-  local executed_unplug=false
-
+  
   if [ "$battery_status" != "$last_battery_status" ] || [ "$battery_percentage" != "$last_battery_percentage" ]; then
     last_battery_status=$battery_status
     last_battery_percentage=$battery_percentage    # Check if battery status or percentage has changed
@@ -133,8 +114,6 @@ get_battery_info
     if [[ "$battery_percentage" -ge "$unplug_charger_threshold" ]] && ! $executed_unplug; then $execute_unplug
         executed_unplug=true executed_low=false
     fi
-
-    if $undock; then fn_status; fi
   fi
 }
 
@@ -142,23 +121,10 @@ get_battery_info
 
 main() { # Main function
 
-battery_full_threshold=${battery_full_threshold:-100}
-battery_critical_threshold=${battery_critical_threshold:-5}
-unplug_charger_threshold=${unplug_charger_threshold:-80}
-battery_low_threshold=${battery_low_threshold:-20}
-timer=${timer:-120}
-notify=${notify:-1140}
-interval=${interval:-5}
-execute_critical=${execute_critical:-"systemctl suspend"}
-execute_low=${execute_low:-}
-execute_unplug=${execute_unplug:-}
+
 
 config_info
 if $verbose; then for line in "Verbose Mode is ON..." "" "" "" ""  ; do echo $line ; done;
-#TODO Might still need this in the future but for now we don't have any battery notify issues
-# current_pid=$$
-# pids=$(pgrep -f "/usr/bin/env bash ${scrDir}/batterynotify.sh" )
-# for pid in $pids ; do if [ "$pid" -ne $current_pid ] ;then kill -STOP "$pid" ;notify-send -a "Battery Notify" -t 2000 -r 9889 -u "CRITICAL" "Debugging STARTED, Pausing Regular Process" ;fi ; done  ; trap resume_processes SIGINT ;
 fi
     get_battery_info # initiate the function
     last_notified_percentage=$battery_percentage
